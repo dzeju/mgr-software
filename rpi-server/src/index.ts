@@ -3,19 +3,20 @@ let Gpio = require('onoff').Gpio;
 // const matrix = require('sense-hat-led');
 // Using this library
 const matrix = require('node-sense-hat').Leds;
+import { IMUmodel, vector } from "./models/IMUmodel";
 
-const O = [0,0,0]//[0,128,128];
-const X = [255,20,147];
+const O = [0, 0, 0]//[0,128,128];
+const X = [255, 20, 147];
 
 const cross = [
-O, O, O, X, X, O, O, O,
-O, O, X, O, O, X, O, O,
-O, O, O, O, O, X, O, O,
-O, O, O, O, X, O, O, O,
-O, O, O, X, O, O, O, O,
-O, O, O, X, O, O, O, O,
-O, O, O, O, O, O, O, O,
-O, O, O, X, O, O, O, O
+  O, O, O, X, X, O, O, O,
+  O, O, X, O, O, X, O, O,
+  O, O, O, O, O, X, O, O,
+  O, O, O, O, X, O, O, O,
+  O, O, O, X, O, O, O, O,
+  O, O, O, X, O, O, O, O,
+  O, O, O, O, O, O, O, O,
+  O, O, O, X, O, O, O, O
 ];
 
 matrix.setPixels(cross);
@@ -42,16 +43,16 @@ const IMU = new imu.IMU();
 //   console.log("Humidity is: ", data.humidity);
 // });
 
-const print_vector3 = (name, data) => {
+const print_vector3 = (name: string, data: vector) => {
   let sx = data.x >= 0 ? ' ' : '';
   let sy = data.y >= 0 ? ' ' : '';
   let sz = data.z >= 0 ? ' ' : '';
   return util.format('%s: %s%s %s%s %s%s ', name, sx, data.x.toFixed(2), sy, data.y.toFixed(2), sz, data.z.toFixed(2));
 }
 
-const headingCorrection = (heading, offset) => {
-  if (typeof offset ==='undefined')
-      offset = 0;
+const headingCorrection = (heading: number, offset: number) => {
+  if (typeof offset === 'undefined')
+    offset = 0;
 
   // Once you have your heading, you must then add your 'Declination Angle', which is the 'Error' of the magnetic field in your location.
   // Find yours here: http://www.magnetic-declination.com/
@@ -70,14 +71,14 @@ const headingCorrection = (heading, offset) => {
   return heading;
 }
 
-const  headingToDegree = (heading) => {
+const headingToDegree = (heading: number) => {
   // Convert radians to degrees for readability.
   return heading * 180 / Math.PI;
 }
 
-let tic = new Date();
-const callb = (e, data) => {
-  let toc = new Date();
+let tic: any = new Date();
+const callb = (e: Event, data: IMUmodel) => {
+  let toc: any = new Date();
 
   if (e) {
     console.log(e);
@@ -96,7 +97,7 @@ const callb = (e, data) => {
   }
   console.log(str + str2);
 
-  setTimeout(() => { tic = new Date(); IMU.getValue(callb); } , 100 - (toc - tic));
+  setTimeout(() => { tic = new Date(); IMU.getValue(callb); }, 1000);
 }
 
 IMU.getValue(callb);
