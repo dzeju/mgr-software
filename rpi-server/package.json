@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "node-opcua": "^2.67.0",
     "node-sense-hat": "^0.0.2",
     "onoff": "^6.0.3",
     "sense-hat-led": "^1.2.0"
