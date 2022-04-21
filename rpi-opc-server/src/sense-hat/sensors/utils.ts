@@ -1,7 +1,7 @@
-import { vector } from "../../models/IMUmodel";
+import { Vector } from "../../models/IMUmodel";
 import { format } from "util"
 
-export const print_vector3 = (name: string, data: vector) => {
+export const print_vector3 = (name: string, data: Vector) => {
   let sx = data.x >= 0 ? ' ' : '';
   let sy = data.y >= 0 ? ' ' : '';
   let sz = data.z >= 0 ? ' ' : '';
