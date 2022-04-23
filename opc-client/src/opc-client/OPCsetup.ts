@@ -45,11 +45,11 @@ export const connect = async (endpointUrl: string) => {
   }
 }
 
-export const createSubscription = async (session: ClientSession, NodeId: NodeIdLike | NodeIdLike[]) => {
-  await subscribe(session, "ns=1;i=1018");
+export const createSubscription = async (session: ClientSession, NodeId: NodeIdLike | NodeIdLike[], varName: string) => {
+  if (!Array.isArray(NodeId)) await subscribe(session, NodeId, varName);
 }
 
-async function main() {
+async function main(session: ClientSession) {
   try {
 
 
@@ -82,15 +82,15 @@ async function main() {
     // await subscribe(session, "ns=1;i=1018");
 
     // step 6: finding the nodeId of a node by Browse name //! PROBABLY WILL NOT USE
-    // const browsePath = makeBrowsePath(
-    //   "RootFolder",
-    //   "/Objects/Sensors"
-    // );
-    // const result = await session.translateBrowsePath(browsePath);
-    // if (result && result?.targets) {
-    //   const productNameNodeId = result.targets[0].targetId;
-    //   console.log(" Product Name nodeId = ", productNameNodeId.toString());
-    // }
+    const browsePath = makeBrowsePath(
+      "RootFolder",
+      "/Objects/Sensors.gyro.x"
+    );
+    const result = await session.translateBrowsePath(browsePath);
+    if (result && result?.targets) {
+      const productNameNodeId = result.targets[0].targetId;
+      console.log(" Product Name nodeId = ", productNameNodeId.toString());
+    }
 
     // close session
     setTimeout(async () => {

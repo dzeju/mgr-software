@@ -1,9 +1,5 @@
 import {
-  OPCUAClient,
-  MessageSecurityMode,
-  SecurityPolicy,
   AttributeIds,
-  makeBrowsePath,
   ClientSubscription,
   TimestampsToReturn,
   MonitoringParametersOptions,
@@ -14,11 +10,13 @@ import {
   NodeIdLike
 } from "node-opcua";
 
+import { setSensorVariable } from "../data/sensorsData"
+
 async function timeout(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const subscribe = async (session: ClientSession, nodeId: NodeIdLike) => {
+export const subscribe = async (session: ClientSession, nodeId: NodeIdLike, varName: string) => {
   const subscription = ClientSubscription.create(session, {
     requestedPublishingInterval: 1000,
     requestedLifetimeCount: 100,
@@ -31,7 +29,7 @@ export const subscribe = async (session: ClientSession, nodeId: NodeIdLike) => {
   subscription
     .on("started", function () {
       console.log(
-        "subscription started for 2 seconds - subscriptionId=",
+        "subscription started - subscriptionId =",
         subscription.subscriptionId
       );
     })
@@ -49,7 +47,7 @@ export const subscribe = async (session: ClientSession, nodeId: NodeIdLike) => {
     attributeId: AttributeIds.Value
   };
   const parameters: MonitoringParametersOptions = {
-    samplingInterval: 100,
+    samplingInterval: 500,
     discardOldest: true,
     queueSize: 10
   };
@@ -62,11 +60,14 @@ export const subscribe = async (session: ClientSession, nodeId: NodeIdLike) => {
   );
 
   monitoredItem.on("changed", (dataValue: DataValue) => {
-    console.log("temperature value has changed : ", dataValue.value.toString());
+    // console.log(" value has changed : ", dataValue.value.toString());
+    setSensorVariable(dataValue.value.value, varName)
   });
 
-  await timeout(9000)
+  monitoredItem.on("err", (message: string) => console.log(message));
 
-  console.log("now terminating subscription");
-  await subscription.terminate();
+  await timeout(100)
+
+  // console.log("now terminating subscription");
+  // await subscription.terminate();
 }
