@@ -45,8 +45,8 @@ export const connect = async (endpointUrl: string) => {
   }
 }
 
-export const createSubscription = async (session: ClientSession, NodeId: NodeIdLike | NodeIdLike[], varName: string) => {
-  if (!Array.isArray(NodeId)) await subscribe(session, NodeId, varName);
+export const createSubscription = async (session: ClientSession, NodeId: NodeIdLike | NodeIdLike[], varName: string, setSensorVariable: any) => {
+  if (!Array.isArray(NodeId)) await subscribe(session, NodeId, varName, setSensorVariable);
 }
 
 async function main(session: ClientSession) {

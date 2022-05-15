@@ -10,13 +10,12 @@ import {
   NodeIdLike
 } from "node-opcua";
 
-import { setSensorVariable } from "../data/sensorsData"
 
 async function timeout(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const subscribe = async (session: ClientSession, nodeId: NodeIdLike, varName: string) => {
+export const subscribe = async (session: ClientSession, nodeId: NodeIdLike, varName: string, setSensorVariable: any) => {
   const subscription = ClientSubscription.create(session, {
     requestedPublishingInterval: 1000,
     requestedLifetimeCount: 100,
@@ -60,7 +59,6 @@ export const subscribe = async (session: ClientSession, nodeId: NodeIdLike, varN
   );
 
   monitoredItem.on("changed", (dataValue: DataValue) => {
-    // console.log(" value has changed : ", dataValue.value.toString());
     setSensorVariable(dataValue.value.value, varName)
   });
 
